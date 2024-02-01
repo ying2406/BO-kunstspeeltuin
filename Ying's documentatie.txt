@@ -1,0 +1,70 @@
+Ying's documentatie
+
+Het eerste wat ik deed was wat onderzoek in verband met wat input + ouput, van wat ik wou maken.
+Met bespreking met mijn groepje werd het de motion sensor en de speaker zou benutten in mijn code.
+
+Daarbij had ik wat dingen opgezocht op het internet om wat meer te weten te komen over de motion sensor en speakers, waarbij ook een paar afbeeldingen zaten op de website waardoor ik al een idee kreeg van hoe ik het moest gaan aanpakken. 
+
+Bij het proces van de opbouw van de code waren er veel errors waarbij ik meestendeels geen idee had waardoor het kwam, Eerste keer kwam het door de speakers als oplossing voor de speakers had ik hulp gevraagd en ook veel websites bezocht/bekeken en gelezen die bij de coumentatie links staan
+
+Daarna kwam het door dat arduino de loops oversloeg in de code, voor de oplossing van de loops had ik hiervoor bedacht om een library te gebruiken maar dat was een niet zo'n "schone" aanpak aangezien in een library veel dingen zitten die niet van belang zijn voor mijn project. Daarbij had eugene mij geadviseerd om arduino reset code aan te maken, aangezien door mijn vorige code ik steeds handmatige de reset knopje moest indrukken zodat de speaker + de motion sensor beiden zouden reseten. Daardoor bleek dat het wel handig om een automatische reset code in de arduino te zetten. 
+
+
+DE CODE:
+
+#include "pitches.h";
+Deze regel bevat een bibliotheek genaamd "pitches.h" die vooraf gedefinieerde frequenties van muzieknoten bevat.
+
+const unsigned int TRIG_PIN = 13; : Het stelt TRIG_PIN in op pin 13, die wordt gebruikt om een ultrasone puls te verzenden om de afstand te meten
+const unsigned int ECHO_PIN = 12; : Het stelt ECHO_PIN in op pin 12, die de gereflecteerde puls ontvangt om de afstand te meten
+const unsigned int BAUD_RATE = 9600; : Het stelt de baudsnelheid in voor seriële communicatie
+
+int melody[] = {NOTE_D4, NOTE_C5, NOTE_FS4, NOTE_A4}; : Het declareert een array van nootfrequenties
+int noteDurations[] = {8, 8, 4, 4}; : Het declareert een array van nootduur
+
+int speed = 90; 
+Het definieert een variabele om de snelheid van de melodie te regelen
+
+void (*resetFunc)(void) = 0; : 
+Het declareert een functieweergave pointer genaamd resetFunc, die zal worden gebruikt om de Arduino te resetten wanneer aan een voorwaarde is voldaan.
+
+setup() functie:
+pinMode(TRIG_PIN, OUTPUT); : Het stelt TRIG_PIN in als een uitvoer pin
+pinMode(ECHO_PIN, INPUT); : Het stelt ECHO_PIN in als een invoerpunt
+Serial.begin(BAUD_RATE); : Hiermee wordt de seriële communicatie gestart met de opgegeven baudsnelheid
+
+notePlay() functie:
+Deze functie speelt de melodie af die is opgeslagen in de melody[] array. Het maakt gebruik van de tone() functie om geluid te genereren en de delay() functie om de lengte van elke noot te regelen
+
+void loop() functie:
+De loop functie herhaalt zich oneindig.
+Het verzendt eerst een ultrasone puls door TRIG_PIN kort op LAAG en vervolgens op HOOG te zetten, en daarna weer op LAAG.
+Vervolgens stelt het ECHO_PIN kort op LAAG en vervolgens op HOOG, en daarna weer op LAAG.
+Het leest de duur van de gereflecteerde puls met behulp van de pulseIn() functie en berekent de afstand in centimeters.
+Het print de afstand naar de seriële monitor
+Als de afstand groter is dan 100 cm, roept het de notePlay() functie aan om de melodie af te spelen, voegt een vertraging toe, print "Reet" naar de seriële monitor en reset vervolgens de Arduino met behulp van de resetFunc functieweergave pointer
+
+void loop() functie:
+De loop functie herhaalt zich oneindig.
+Het verzendt eerst een ultrasone puls door TRIG_PIN kort op LAAG en vervolgens op HOOG te zetten, en daarna weer op LAAG
+Vervolgens stelt het ECHO_PIN kort op LAAG en vervolgens op HOOG, en daarna weer op LAAG
+Het leest de duur van de gereflecteerde puls met behulp van de pulseIn() functie en berekent de afstand in centimeters
+Het print de afstand naar de seriële monitor.
+Als de afstand groter is dan 100 cm, roept het de notePlay() functie aan om de melodie af te spelen, voegt een vertraging toe, print "Reet" naar de seriële monitor en reset vervolgens de Arduino met behulp van de resetFunc functieweergave
+
+Documentatie links
+
+MOTION SENSOR LINKS
+https://arduinogetstarted.com/tutorials/arduino-motion-sensor
+https://forum.arduino.cc/t/arduino-motion-sensor-light/1125920/4
+https://forum.arduino.cc/t/simple-motion-sensor-output-issue/993654
+
+MELODY/SPEAKER links
+https://docs.arduino.cc/learn/programming/audio/
+https://www.arduino.cc/en/Tutorial/BuiltInExamples/toneMelody
+https://docs.arduino.cc/built-in-examples/digital/toneMelody/
+https://tigoe.github.io/SoundExamples/melody.html
+https://docs.arduino.cc/built-in-examples/digital/toneMelody/
+
+RESET LINK
+https://www.instructables.com/two-ways-to-reset-arduino-in-software/
